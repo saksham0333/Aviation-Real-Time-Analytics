@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: fact_flights
+    columns:
+      - name: flight_status
+        tests:
+          - accepted_values:
+              values:
+                [
+                  "scheduled",
+                  "cancelled",
+                  "unknown",
+                  "diverted",
+                  "landed",
+                  "active"
+                ]
+
+      - name: live_is_ground
+        tests:
+          - accepted_values:
+              values: ["True", "False"]
+
+      - name: flight_id
+        tests:
+          - unique
+          - not_null
+
+
+  - name: dim_airlines
+    columns:
+      - name: airline_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_airplanes
+    columns:
+      - name: airplanes_id
+        tests:
+          - unique
+          - not_null
+          
+      - name: registration_number
+        tests:
+          - not_null
+
+      - name: iata_type
+        tests:
+          - not_null
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - registration_number
+            - iata_type
+
+  - name: dim_airports
+    columns:
+      - name: airport_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_cities
+    columns:
+      - name: city_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_countries
+    columns:
+      - name: country_id
+        tests:
+          - unique
+          - not_null
+
+      - name: country_name
+        tests:
+          - unique
+          - not_null
